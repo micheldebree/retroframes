@@ -29,3 +29,5 @@ bower_components
 
 dist
 .tmp
+.tags
+.tags1
