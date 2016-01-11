@@ -39,10 +39,6 @@ var paths = {
 // Reusable pipelines //
 ////////////////////////
 
-var lintScripts = lazypipe()
-  .pipe($.jshint, '.jshintrc')
-  .pipe($.jshint.reporter, 'jshint-stylish');
-
 var styles = lazypipe()
   .pipe($.autoprefixer, 'last 1 version')
   .pipe(gulp.dest, '.tmp/styles');
@@ -54,11 +50,6 @@ var styles = lazypipe()
 gulp.task('styles', function () {
   return gulp.src(paths.styles)
     .pipe(styles());
-});
-
-gulp.task('lint:scripts', function () {
-  return gulp.src(paths.scripts)
-    .pipe(lintScripts());
 });
 
 gulp.task('clean:tmp', function (cb) {
@@ -98,19 +89,16 @@ gulp.task('watch', function () {
 
   $.watch(paths.scripts)
     .pipe($.plumber())
-    .pipe(lintScripts())
     .pipe($.connect.reload());
 
   $.watch(paths.test)
-    .pipe($.plumber())
-    .pipe(lintScripts());
+    .pipe($.plumber());
 
   gulp.watch('bower.json', ['bower']);
 });
 
 gulp.task('serve', function (cb) {
   runSequence('clean:tmp',
-    ['lint:scripts'],
     ['start:client'],
     'watch', cb);
 });
