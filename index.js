@@ -13,7 +13,8 @@ var Remapper = require('./retropixels/Remapper.js');
 var OrderedDitherers = require('./retropixels/OrderedDitherers');
 var ErrorDiffusionDitherers = require('./retropixels/ErrorDiffusionDitherers');
 var ProgressBar = require('progress');
-var VideoTool = require('./VideoTool.js');
+var VideoTool = require('./VideoTool.js'),
+    Converter = require('./Converter.js');
 var bar;
 var tmpDir;
 
@@ -21,32 +22,7 @@ var tmpDir;
 var fps = 25,
     graphicMode = GraphicModes.c64Multicolor;
 
-function convertImage(image) {
-    var x,
-        y,
-        pixel;
-        
-        retroPicture = graphicMode.create();
-        retroPicture.dither = OrderedDitherers.bayer4x4;
 
-    // retroPicture.errorDiffusionDither = ErrorDiffusionDitherers.fsDither;
-    // retroPicture.mappingWeight = [1, 1, 0];
-
-    // create optimal colormaps (skip for worse quality)
-    // if skipped, ColorMaps are filled up on first come, first server basis
-    Remapper.optimizeColorMaps(image.bitmap, retroPicture);
-
-    retroPicture.drawImageData(image.bitmap);
-
-    for (y = 0; y < image.bitmap.height; y += 1) {
-        for (x = 0; x < image.bitmap.width; x += 1) {
-            PixelCalculator.poke(image.bitmap, x, y, retroPicture.peek(x, y));
-        }
-    }
-
-    // resize according to pixel width and height
-    image.resize(retroPicture.width * retroPicture.pWidth, retroPicture.height * retroPicture.pHeight);
-}
 
 // delete a file, and do nothing if it doesn't exist
 function silentDelete(filename, callback) {
@@ -67,7 +43,7 @@ function convert(filenames, index, callback) {
         bar.tick();
         Jimp.read(filenames[index], function(err, image) {
             if (err) throw err;
-            convertImage(image);
+            Converter.convertImage(image, graphicMode);
             image.write(filenames[index]);
             convert(filenames, index + 1, callback);
         });
