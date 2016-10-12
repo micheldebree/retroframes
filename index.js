@@ -31,16 +31,15 @@ function convertImage(image) {
 
     // retroPicture.errorDiffusionDither = ErrorDiffusionDitherers.fsDither;
     // retroPicture.mappingWeight = [1, 1, 0];
-    // scale to retroPicture size
-    // image.resize(retroPicture.width, retroPicture.height);
 
     // create optimal colormaps (skip for worse quality)
-    Remapper.mapImageData(image.bitmap, retroPicture);
+    // if skipped, ColorMaps are filled up on first come, first server basis
+    Remapper.optimizeColorMaps(image.bitmap, retroPicture);
 
-    // write pixels into retroPicture, read the back, and poke into final image
+    retroPicture.drawImageData(image.bitmap);
+
     for (y = 0; y < image.bitmap.height; y += 1) {
         for (x = 0; x < image.bitmap.width; x += 1) {
-            retroPicture.poke(x, y, PixelCalculator.peek(image.bitmap, x, y));
             PixelCalculator.poke(image.bitmap, x, y, retroPicture.peek(x, y));
         }
     }
