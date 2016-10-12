@@ -2,7 +2,7 @@
 // http://stackoverflow.com/questions/21194934/node-how-to-create-a-directory-if-doesnt-exist
 // TODO: input arguments
 
-var fs = require('fs');
+var fs = require('fs-extra');
 var Jimp = require('jimp');
 var PixelImage = require('./retropixels/PixelImage.js');
 var GraphicModes = require('./retropixels/GraphicModes.js');
@@ -105,10 +105,11 @@ function findAllFiles(directory, callback) {
     });
 }
 
-function cleanup(callback) {
-    silentDelete('out.mp4', callback);
-    // TODO: clean up tmp dir
-
+function cleanup(tmpDir, callback) {
+    silentDelete('out.mp4', function() {
+      console.log("Removing " + tmpDir);
+      fs.remove(tmpDir, callback);
+    });
 }
 
 function convertVideo(filename) {
@@ -122,7 +123,7 @@ function convertVideo(filename) {
                 convertFiles(files, function() {
                     VideoTool.combineFrames('out.mp4', tmpDir, fps, function() {
                         VideoTool.muxAudio('final.mp4', 'out.mp4', 'in.mp4', function() {
-                            cleanup(function() {
+                            cleanup(tmpDir, function() {
                                 console.log('Done.');
                             });
                         });
@@ -132,13 +133,6 @@ function convertVideo(filename) {
         });
     });
 }
-
-
-// VideoTool.getFilter('in.mp4', 320, 200, 160, 200, function(filter) {
-//   console.log("Filter: " + filter);
-// });
-// 
-// return;
 
 silentDelete('tmp.mp4', function() {
     silentDelete('out.mp4', function() {
