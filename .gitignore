@@ -1,0 +1,4 @@
+node_modules
+tmp-*
+*.mp4
+.tags*
