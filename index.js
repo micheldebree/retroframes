@@ -16,7 +16,6 @@ var ProgressBar = require('progress');
 var VideoTool = require('./VideoTool.js'),
     Converter = require('./Converter.js');
 var bar;
-var tmpDir;
 
 // frames per second of result video
 var fps = 25,
@@ -52,7 +51,7 @@ function convert(filenames, index, callback) {
     }
 }
 
-function convertFiles(files, callback) {
+function convertFiles(tmpDir, files, callback) {
     bar = new ProgressBar('Pixelating... [:bar] :percent frame :current/:total :etas', {
         total: files.length
     });
@@ -96,15 +95,14 @@ function makeMovie(tmpDir, callback) {
 }
 
 function convertVideo(filename, callback) {
-    fs.mkdtemp('./tmp-', function(error, dir) {
+    fs.mkdtemp('./tmp-', function(error, tmpDir) {
         if (error) throw error;
-        console.log("Created temporary directory " + dir);
-        tmpDir = dir;
+        console.log("Created temporary directory " + tmpDir);
         retroPicture = graphicMode.create();
         VideoTool.extractFrames(filename, tmpDir, fps, retroPicture, function() {
             findAllFiles(tmpDir, function(files) {
-                convertFiles(files, function() {
-                callback();
+                convertFiles(tmpDir, files, function() {
+                callback(tmpDir);
                 });
             });
         });
@@ -114,7 +112,7 @@ function convertVideo(filename, callback) {
 silentDelete('tmp.mp4', function() {
     silentDelete('out.mp4', function() {
         silentDelete('final.mp4', function() {
-            convertVideo('in.mp4', function() {
+            convertVideo('in.mp4', function(tmpDir) {
                 makeMovie(tmpDir, function() {
                     cleanup(tmpDir, function() {
                         console.log('Done.');
