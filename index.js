@@ -35,7 +35,7 @@ function convertImage(image) {
     // image.resize(retroPicture.width, retroPicture.height);
 
     // create optimal colormaps (skip for worse quality)
-    new Remapper(retroPicture).mapImageData(image.bitmap);
+    Remapper.mapImageData(image.bitmap, retroPicture);
 
     // write pixels into retroPicture, read the back, and poke into final image
     for (y = 0; y < image.bitmap.height; y += 1) {
