@@ -82,12 +82,20 @@ function findAllFiles(directory, callback) {
 
 function cleanup(tmpDir, callback) {
     silentDelete('out.mp4', function() {
-      console.log("Removing " + tmpDir);
-      fs.remove(tmpDir, callback);
+        console.log("Removing " + tmpDir);
+        fs.remove(tmpDir, callback);
     });
 }
 
-function convertVideo(filename) {
+function makeMovie(tmpDir, callback) {
+    VideoTool.combineFrames('out.mp4', tmpDir, fps, function() {
+        VideoTool.muxAudio('final.mp4', 'out.mp4', 'in.mp4', function() {
+            callback();
+        });
+    });
+}
+
+function convertVideo(filename, callback) {
     fs.mkdtemp('./tmp-', function(error, dir) {
         if (error) throw error;
         console.log("Created temporary directory " + dir);
@@ -96,13 +104,7 @@ function convertVideo(filename) {
         VideoTool.extractFrames(filename, tmpDir, fps, retroPicture, function() {
             findAllFiles(tmpDir, function(files) {
                 convertFiles(files, function() {
-                    VideoTool.combineFrames('out.mp4', tmpDir, fps, function() {
-                        VideoTool.muxAudio('final.mp4', 'out.mp4', 'in.mp4', function() {
-                            cleanup(tmpDir, function() {
-                                console.log('Done.');
-                            });
-                        });
-                    });
+                callback();
                 });
             });
         });
@@ -112,7 +114,13 @@ function convertVideo(filename) {
 silentDelete('tmp.mp4', function() {
     silentDelete('out.mp4', function() {
         silentDelete('final.mp4', function() {
-            convertVideo('in.mp4');
+            convertVideo('in.mp4', function() {
+                makeMovie(tmpDir, function() {
+                    cleanup(tmpDir, function() {
+                        console.log('Done.');
+                    });
+                });
+            });
         });
     });
 });
