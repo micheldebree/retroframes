@@ -12,6 +12,7 @@ var PixelCalculator = require('./retropixels/PixelCalculator.js');
 var Remapper = require('./retropixels/Remapper.js');
 var OrderedDitherers = require('./retropixels/OrderedDitherers');
 var ErrorDiffusionDitherers = require('./retropixels/ErrorDiffusionDitherers');
+var ProgressBar = require('progress');
 var VideoTool = require('./VideoTool.js'),
     Converter = require('./Converter.js');
 var bar;
@@ -51,8 +52,6 @@ function makeMovie(tmpDir, callback) {
         });
     });
 }
-
-
 
 silentDelete('tmp.mp4', function() {
     silentDelete('out.mp4', function() {

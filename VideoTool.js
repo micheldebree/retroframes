@@ -56,6 +56,8 @@ function extractFrames(filename, directory, framesPerSecond, pixelImage, callbac
     getFilter(filename, cropWidth, cropHeight, destWidth, destHeight, function(filter) {
         args = ['-i', filename, '-r', framesPerSecond];
         console.log('Extracting frames from ' + filename + ' to ' + directory + '...');
+        args.push('-t');
+        args.push('00:00:20');
         console.log('Using filter: ' + filter);
         args.push('-vf');
         args.push(filter);
@@ -87,8 +89,16 @@ function muxAudio(filename, videoFilename, audioFilename, callback) {
     ], callback);
 }
 
+function makeGif(filename, framesDirectory, fps, callback) {
+  console.log('Making animated GIF ' + filename + ' from frames in ' + framesDirectory + ' with ' + fps + 'fps');
+  exec('convert', ['-loop', '0', '-delay', 100/fps, framesDirectory + '/*', filename], function() {
+    callback();
+  });
+}
+
 module.exports = {
     extractFrames: extractFrames,
     combineFrames: combineFrames,
-    muxAudio: muxAudio
+    muxAudio: muxAudio,
+    makeGif: makeGif
 };
