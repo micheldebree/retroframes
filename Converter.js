@@ -53,24 +53,26 @@ function convert(filenames, index, graphicMode, callback) {
     }
 }
 
-function convertFiles(tmpDir, files, graphicMode, callback) {
-    bar = new ProgressBar('Pixelating... [:bar] :percent frame :current/:total :etas', {
-        total: files.length
-    });
-    // prepend tmp dir
-    files = files.map(function(file) {
-        return tmpDir + '/' + file;
-    });
-
-    if (files.length > 0) {
-        console.log("Converting " + files.length + " files");
-        convert(files, 0, graphicMode, function() {
-            console.log("Done converting.");
-            callback();
+function convertFiles(tmpDir, graphicMode, callback) {
+    findAllFiles(tmpDir, function(files) {
+        bar = new ProgressBar('Pixelating... [:bar] :percent frame :current/:total :etas', {
+            total: files.length
         });
-    } else {
-        throw new Error("No frames found to process.");
-    }
+        // prepend tmp dir
+        files = files.map(function(file) {
+            return tmpDir + '/' + file;
+        });
+
+        if (files.length > 0) {
+            console.log("Converting " + files.length + " files");
+            convert(files, 0, graphicMode, function() {
+                console.log("Done converting.");
+                callback();
+            });
+        } else {
+            throw new Error("No frames found to process.");
+        }
+    });
 }
 
 function getFilter(filename, pixelImage, callback) {
@@ -84,13 +86,12 @@ function getFilter(filename, pixelImage, callback) {
 }
 
 // extract frames and convert them to a graphicMode
+// returns the temporary folder that contains the converted frames
 function convertVideo(filename, graphicMode, fps, callback) {
     getFilter(filename, graphicMode.create(), function(filter) {
-        VideoTool.extractFrames(filename, fps, filter, function(tmpDir) {
-            findAllFiles(tmpDir, function(files) {
-                convertFiles(tmpDir, files, graphicMode, function() {
-                    callback(tmpDir);
-                });
+        VideoTool.extractFrames(filename, fps, filter, undefined, function(tmpDir) {
+            convertFiles(tmpDir, graphicMode, function() {
+                callback(tmpDir);
             });
         });
     });

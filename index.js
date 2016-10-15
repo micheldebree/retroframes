@@ -21,8 +21,6 @@ var bar;
 var fps = 25,
     graphicMode = GraphicModes.c64Multicolor;
 
-
-
 // delete a file, and do nothing if it doesn't exist
 function silentDelete(filename, callback) {
     fs.unlink(filename, function(error) {
@@ -66,4 +64,3 @@ silentDelete('tmp.mp4', function() {
         });
     });
 });
-return;

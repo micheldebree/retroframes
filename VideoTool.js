@@ -1,7 +1,6 @@
-// A wrapper around ffmpeg installed on system.
+// A wrapper around ffmpeg and ImageMagick installed on system.
 var exec = require('child_process').execFile,
     fs = require('fs-extra');
-
 
 function run(options, callback) {
     exec('ffmpeg', options, function(error, stdout, stderr) {
@@ -21,7 +20,7 @@ function cropFillFilter(videofilename, destWidth, destHeight, callback) {
         sourceLeft = (srcWidth - cropwidth) / 2;
         sourceTop = (srcHeight - cropheight) / 2;
         console.log('Input video size: ' + srcWidth + 'x' + srcHeight);
-        callback('crop=' + cropwidth + ':' + cropheight + ':' + sourceLeft + ':' + sourceTop);
+        callback('crop=' + cropwidth + ':' + cropheight + ':' + sourceLeft + ':' + sourceTop + ',scale=' + destWidth + ':' + destHeight);
     });
 }
 
@@ -41,13 +40,16 @@ function getSize(videofilename, callback) {
     });
 }
 
-function extractFrames(filename, framesPerSecond, filter, callback) {
+function extractFrames(filename, framesPerSecond, filter, maxTime, callback) {
     fs.mkdtemp('./tmp-', function(error, tmpDir) {
         if (error) throw error;
         args = ['-i', filename, '-r', framesPerSecond];
-        console.log('Extracting frames from ' + filename + ' to ' + tmpDir + '...');
-        args.push('-t');
-        args.push('00:00:05');
+        console.log('Extracting frames from ' + filename + ' to ' + tmpDir + ' at ' + framesPerSecond + 'fps.');
+        if (maxTime !== undefined) {
+            console.log("Using upto " + maxTime);
+            args.push('-t');
+            args.push(maxTime);
+        }
         if (filter !== undefined) {
             console.log('Using filter: ' + filter);
             args.push('-vf');
