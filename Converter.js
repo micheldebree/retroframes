@@ -1,34 +1,34 @@
 // Convert a JIMP picture to a PixelImage 
 var PixelCalculator = require('./retropixels/PixelCalculator.js'),
-  Remapper = require('./retropixels/Remapper.js'),
-  OrderedDitherers = require('./retropixels/OrderedDitherers.js'),
-  fs = require('fs-extra'),
-  VideoTool = require('./VideoTool.js'),
-  ProgressBar = require('progress'),
-  Jimp = require('jimp');
+    Remapper = require('./retropixels/Remapper.js'),
+    OrderedDitherers = require('./retropixels/OrderedDitherers.js'),
+    fs = require('fs-extra'),
+    VideoTool = require('./VideoTool.js'),
+    ProgressBar = require('progress'),
+    Jimp = require('jimp');
 
 function convertImage(jimpImage, graphicMode) {
-  var x,
-    y,
-    pixel,
-    pixelImage = graphicMode.create();
+    var x,
+        y,
+        pixel,
+        pixelImage = graphicMode.create();
 
-  pixelImage.dither = OrderedDitherers.bayer4x4;
+    pixelImage.dither = OrderedDitherers.bayer4x4;
 
-  // create optimal colormaps (skip for worse quality)
-  // if skipped, ColorMaps are filled up on first come, first server basis
-  Remapper.optimizeColorMaps(jimpImage.bitmap, pixelImage);
+    // create optimal colormaps (skip for worse quality)
+    // if skipped, ColorMaps are filled up on first come, first server basis
+    Remapper.optimizeColorMaps(jimpImage.bitmap, pixelImage);
 
-  pixelImage.drawImageData(jimpImage.bitmap);
+    pixelImage.drawImageData(jimpImage.bitmap);
 
-  for (y = 0; y < jimpImage.bitmap.height; y += 1) {
-    for (x = 0; x < jimpImage.bitmap.width; x += 1) {
-      PixelCalculator.poke(jimpImage.bitmap, x, y, pixelImage.peek(x, y));
+    for (y = 0; y < jimpImage.bitmap.height; y += 1) {
+        for (x = 0; x < jimpImage.bitmap.width; x += 1) {
+            PixelCalculator.poke(jimpImage.bitmap, x, y, pixelImage.peek(x, y));
+        }
     }
-  }
 
-  // resize according to pixel width and height
-  jimpImage.resize(pixelImage.width * pixelImage.pWidth, pixelImage.height * pixelImage.pHeight);
+    // resize according to pixel width and height
+    jimpImage.resize(pixelImage.width * pixelImage.pWidth, pixelImage.height * pixelImage.pHeight);
 }
 
 function findAllFiles(directory, callback) {
@@ -73,16 +73,23 @@ function convertFiles(tmpDir, files, graphicMode, callback) {
     }
 }
 
+function getFilter(filename, pixelImage, callback) {
+    var destWidth = pixelImage.width,
+        destHeight = pixelImage.height,
+        cropWidth = pixelImage.width * pixelImage.pWidth,
+        cropHeight = pixelImage.height * pixelImage.pHeight;
+    VideoTool.cropFillFilter(filename, cropWidth, cropHeight, function(cropfilter) {
+        callback(cropfilter + ',' + 'scale=' + destWidth + ':' + destHeight);
+    });
+}
+
 // extract frames and convert them to a graphicMode
 function convertVideo(filename, graphicMode, fps, callback) {
-    fs.mkdtemp('./tmp-', function(error, tmpDir) {
-        if (error) throw error;
-        console.log("Created temporary directory " + tmpDir);
-        retroPicture = graphicMode.create();
-        VideoTool.extractFrames(filename, tmpDir, fps, retroPicture, function() {
+    getFilter(filename, graphicMode.create(), function(filter) {
+        VideoTool.extractFrames(filename, fps, filter, function(tmpDir) {
             findAllFiles(tmpDir, function(files) {
                 convertFiles(tmpDir, files, graphicMode, function() {
-                callback(tmpDir);
+                    callback(tmpDir);
                 });
             });
         });
@@ -90,5 +97,5 @@ function convertVideo(filename, graphicMode, fps, callback) {
 }
 
 module.exports = {
-  convertVideo: convertVideo
+    convertVideo: convertVideo
 };

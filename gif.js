@@ -2,7 +2,7 @@ var VideoTool = require('./VideoTool.js'),
     GraphicModes = require('./retropixels/GraphicModes.js'),
     fs = require('fs-extra'),
     Converter = require('./Converter.js'),
-    fps = 10,
+    fps = 5,
     graphicMode = GraphicModes.c64Multicolor;
 
 Converter.convertVideo('in.mp4', graphicMode, fps, function(tmpDir) {

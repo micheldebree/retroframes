@@ -1,5 +1,7 @@
 // A wrapper around ffmpeg installed on system.
-var exec = require('child_process').execFile;
+var exec = require('child_process').execFile,
+    fs = require('fs-extra');
+
 
 function run(options, callback) {
     exec('ffmpeg', options, function(error, stdout, stderr) {
@@ -9,7 +11,7 @@ function run(options, callback) {
 }
 
 // Get ffmpeg filter to crop video to fill destWidth and destHeight 
-function getCropFilter(videofilename, destWidth, destHeight, callback) {
+function cropFillFilter(videofilename, destWidth, destHeight, callback) {
     // fill up the image
     getSize(videofilename, function(srcWidth, srcHeight) {
         var destratio = destWidth / destHeight;
@@ -39,30 +41,22 @@ function getSize(videofilename, callback) {
     });
 }
 
-function getFilter(filename, cropWidth, cropHeight, destWidth, destHeight, callback) {
-    getSize(filename, function(srcWidth, srcHeight) {
-        getCropFilter(filename, cropWidth, cropHeight, function(cropfilter) {
-            callback(cropfilter + ',' + 'scale=' + destWidth + ':' + destHeight);
-        });
-    });
-}
-
-function extractFrames(filename, directory, framesPerSecond, pixelImage, callback) {
-    var destWidth = pixelImage.width,
-        destHeight = pixelImage.height,
-        cropWidth = pixelImage.width * pixelImage.pWidth,
-        cropHeight = pixelImage.height * pixelImage.pHeight;
-
-    getFilter(filename, cropWidth, cropHeight, destWidth, destHeight, function(filter) {
+function extractFrames(filename, framesPerSecond, filter, callback) {
+    fs.mkdtemp('./tmp-', function(error, tmpDir) {
+        if (error) throw error;
         args = ['-i', filename, '-r', framesPerSecond];
-        console.log('Extracting frames from ' + filename + ' to ' + directory + '...');
+        console.log('Extracting frames from ' + filename + ' to ' + tmpDir + '...');
         args.push('-t');
-        args.push('00:00:20');
-        console.log('Using filter: ' + filter);
-        args.push('-vf');
-        args.push(filter);
-        args.push(directory + '/%05d.png');
-        run(args, callback);
+        args.push('00:00:05');
+        if (filter !== undefined) {
+            console.log('Using filter: ' + filter);
+            args.push('-vf');
+            args.push(filter);
+        }
+        args.push(tmpDir + '/%05d.png');
+        run(args, function() {
+            callback(tmpDir);
+        });
     });
 }
 
@@ -90,15 +84,16 @@ function muxAudio(filename, videoFilename, audioFilename, callback) {
 }
 
 function makeGif(filename, framesDirectory, fps, callback) {
-  console.log('Making animated GIF ' + filename + ' from frames in ' + framesDirectory + ' with ' + fps + 'fps');
-  exec('convert', ['-loop', '0', '-delay', 100/fps, framesDirectory + '/*', filename], function() {
-    callback();
-  });
+    console.log('Making animated GIF ' + filename + ' from frames in ' + framesDirectory + ' with ' + fps + 'fps');
+    exec('convert', ['-loop', '0', '-delay', 100 / fps, framesDirectory + '/*', filename], function() {
+        callback();
+    });
 }
 
 module.exports = {
     extractFrames: extractFrames,
     combineFrames: combineFrames,
+    cropFillFilter: cropFillFilter,
     muxAudio: muxAudio,
     makeGif: makeGif
 };
