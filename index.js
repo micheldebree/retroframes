@@ -2,8 +2,8 @@
 // http://stackoverflow.com/questions/21194934/node-how-to-create-a-directory-if-doesnt-exist
 // TODO: input arguments
 
-var fs = require('fs-extra');
-var Jimp = require('jimp');
+var fs = require('fs-extra'),
+    Jimp = require('jimp');
 var PixelImage = require('./retropixels/PixelImage.js');
 var GraphicModes = require('./retropixels/GraphicModes.js');
 var Palette = require('./retropixels/Palette.js');
@@ -18,7 +18,7 @@ var VideoTool = require('./VideoTool.js'),
 var bar;
 
 // frames per second of result video
-var fps = 25,
+var fps = 15,
     graphicMode = GraphicModes.c64Multicolor;
 
 // delete a file, and do nothing if it doesn't exist

@@ -1,16 +1,21 @@
 {
-  "name": "retroframes",
-  "version": "0.1.0",
-  "description": "Process video with retropixels",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Michel de Bree",
-  "license": "MIT",
-  "dependencies": {
-    "fs-extra": "0.30.0",
-    "jimp": "0.2.27",
-    "progress": "1.1.8"
-  }
+    "name": "retroframes",
+    "version": "0.1.0",
+    "description": "Process video with retropixels",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/micheldebree/retroframes.git"
+    },
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Michel de Bree",
+    "license": "MIT",
+    "dependencies": {
+        "commander": "2.9.0",
+        "fs-extra": "0.30.0",
+        "jimp": "0.2.27",
+        "progress": "1.1.8"
+    }
 }

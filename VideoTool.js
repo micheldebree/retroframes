@@ -15,10 +15,10 @@ function cropFillFilter(videofilename, destWidth, destHeight, callback) {
     getSize(videofilename, function(srcWidth, srcHeight) {
         var destratio = destWidth / destHeight;
         var srcratio = srcWidth / srcHeight;
-        cropwidth = srcratio > destratio ? srcHeight * destratio : srcWidth;
-        cropheight = srcratio > destratio ? srcHeight : srcWidth / destratio;
-        sourceLeft = (srcWidth - cropwidth) / 2;
-        sourceTop = (srcHeight - cropheight) / 2;
+        cropwidth = Math.round(srcratio > destratio ? srcHeight * destratio : srcWidth);
+        cropheight = Math.round(srcratio > destratio ? srcHeight : srcWidth / destratio);
+        sourceLeft = Math.round((srcWidth - cropwidth) / 2);
+        sourceTop = Math.round((srcHeight - cropheight) / 2);
         console.log('Input video size: ' + srcWidth + 'x' + srcHeight);
         callback('crop=' + cropwidth + ':' + cropheight + ':' + sourceLeft + ':' + sourceTop + ',scale=' + destWidth + ':' + destHeight);
     });

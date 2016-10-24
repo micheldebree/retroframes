@@ -1,14 +1,47 @@
 var VideoTool = require('./VideoTool.js'),
-    GraphicModes = require('./retropixels/GraphicModes.js'),
     fs = require('fs-extra'),
-    Converter = require('./Converter.js'),
     fps = 5,
-    graphicMode = GraphicModes.c64Multicolor;
+    endtime = '00:00:10',
+    cli = require('commander');
 
-Converter.convertVideo('in.mp4', graphicMode, fps, function(tmpDir) {
-    VideoTool.makeGif('final.gif', tmpDir, fps, function() {
-        fs.remove(tmpDir, function() {
-            console.log("Done.");
+cli.version('0.0.1')
+    .usage('[options] <infile> [outfile]')
+    .option('-f --fps <frames-per-second>', 'Frames per second for animated GIF (5-25) default 5', parseInt)
+    .option('-e --endtime <end time>', 'Process until this timestamp (hh:mm:ss) default 00:00:10', /^[0-9]{2}:[0-9]{2}:[0-9]{2}$/i )
+    .parse(process.argv);
+
+if (cli.fps !== undefined) {
+  fps = cli.fps;
+}
+if (isNaN(fps) || fps < 5 || fps > 25) {
+  console.error('Frames per second should be a whole number between 5 and 25.');
+  cli.help();
+}
+
+if (cli.endtime !== undefined) {
+  endtime = cli.endtime;
+}
+
+console.log('fps =' + fps);
+
+var inFile = cli.args[0],
+    outFile = cli.args[1];
+
+if (inFile === undefined) {
+    console.error('Input file is mandatory.');
+    cli.help();
+}
+
+if (outFile === undefined) {
+    outFile = inFile + '.gif';
+}
+
+VideoTool.cropFillFilter(inFile, 256, 200, function(filter) {
+    VideoTool.extractFrames(inFile, fps, filter, endtime, function(tmpDir) {
+        VideoTool.makeGif(outFile, tmpDir, fps, function() {
+            fs.remove(tmpDir, function() {
+                console.log("Done.");
+            });
         });
     });
 });

@@ -14,7 +14,8 @@ function convertImage(jimpImage, graphicMode) {
         pixelImage = graphicMode.create();
 
     pixelImage.dither = OrderedDitherers.bayer4x4;
-
+    
+    // jimpImage.normalize();
     // create optimal colormaps (skip for worse quality)
     // if skipped, ColorMaps are filled up on first come, first server basis
     Remapper.optimizeColorMaps(jimpImage.bitmap, pixelImage);
