@@ -3,22 +3,26 @@
 // TODO: input arguments
 
 var fs = require('fs-extra'),
-    Jimp = require('jimp');
-var PixelImage = require('./retropixels/PixelImage.js');
-var GraphicModes = require('./retropixels/GraphicModes.js');
-var Palette = require('./retropixels/Palette.js');
-var ColorMap = require('./retropixels/ColorMap.js');
-var PixelCalculator = require('./retropixels/PixelCalculator.js');
-var Remapper = require('./retropixels/Remapper.js');
-var OrderedDitherers = require('./retropixels/OrderedDitherers');
-var ErrorDiffusionDitherers = require('./retropixels/ErrorDiffusionDitherers');
-var ProgressBar = require('progress');
-var VideoTool = require('./VideoTool.js'),
-    Converter = require('./Converter.js');
-var bar;
+    Jimp = require('jimp'),
+    PixelImage = require('./retropixels/PixelImage.js'),
+    GraphicModes = require('./retropixels/GraphicModes.js'),
+    Palette = require('./retropixels/Palette.js'),
+    ColorMap = require('./retropixels/ColorMap.js'),
+    PixelCalculator = require('./retropixels/PixelCalculator.js'),
+    Remapper = require('./retropixels/Remapper.js'),
+    OrderedDitherers = require('./retropixels/OrderedDitherers'),
+    ErrorDiffusionDitherers = require('./retropixels/ErrorDiffusionDitherers'),
+    ProgressBar = require('progress'),
+    VideoTool = require('./VideoTool.js'),
+    Converter = require('./Converter.js'),
+    bar;
 
 // frames per second of result video
 var fps = 15,
+    inFile = 'in.mp4',
+    outFile = 'final.mp4',
+    tmpFile = 'tmp.mp4',
+    endTime = undefined,
     graphicMode = GraphicModes.c64Multicolor;
 
 // delete a file, and do nothing if it doesn't exist
@@ -36,7 +40,7 @@ function silentDelete(filename, callback) {
 }
 
 function cleanup(tmpDir, callback) {
-    silentDelete('out.mp4', function() {
+    silentDelete(tmpFile, function() {
         console.log("Removing " + tmpDir);
         fs.remove(tmpDir, callback);
     });
@@ -44,21 +48,19 @@ function cleanup(tmpDir, callback) {
 
 // combine frames from a folder into a movie
 function makeMovie(tmpDir, callback) {
-    VideoTool.combineFrames('out.mp4', tmpDir, fps, function() {
-        VideoTool.muxAudio('final.mp4', 'out.mp4', 'in.mp4', function() {
+    VideoTool.combineFrames(tmpFile, tmpDir, fps, function() {
+        VideoTool.muxAudio(outFile, tmpFile, inFile, function() {
             callback();
         });
     });
 }
 
-silentDelete('tmp.mp4', function() {
-    silentDelete('out.mp4', function() {
-        silentDelete('final.mp4', function() {
-            Converter.convertVideo('in.mp4', graphicMode, fps, function(tmpDir) {
-                makeMovie(tmpDir, function() {
-                    cleanup(tmpDir, function() {
-                        console.log('Done.');
-                    });
+silentDelete(tmpFile, function() {
+    silentDelete(outFile, function() {
+        Converter.convertVideo(inFile, graphicMode, fps, endTime, function(tmpDir) {
+            makeMovie(tmpDir, function() {
+                cleanup(tmpDir, function() {
+                    console.log('Done.');
                 });
             });
         });

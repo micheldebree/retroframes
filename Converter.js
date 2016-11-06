@@ -1,4 +1,4 @@
-// Convert a JIMP picture to a PixelImage 
+// Convert a JIMP picture to a PixelImage
 var PixelCalculator = require('./retropixels/PixelCalculator.js'),
     Remapper = require('./retropixels/Remapper.js'),
     OrderedDitherers = require('./retropixels/OrderedDitherers.js'),
@@ -14,7 +14,8 @@ function convertImage(jimpImage, graphicMode) {
         pixelImage = graphicMode.create();
 
     pixelImage.dither = OrderedDitherers.bayer4x4;
-    
+    // pixelImage.mappingWeight = [1, 0, 0];
+
     // jimpImage.normalize();
     // create optimal colormaps (skip for worse quality)
     // if skipped, ColorMaps are filled up on first come, first server basis
@@ -88,9 +89,9 @@ function getFilter(filename, pixelImage, callback) {
 
 // extract frames and convert them to a graphicMode
 // returns the temporary folder that contains the converted frames
-function convertVideo(filename, graphicMode, fps, callback) {
+function convertVideo(filename, graphicMode, fps, endTime, callback) {
     getFilter(filename, graphicMode.create(), function(filter) {
-        VideoTool.extractFrames(filename, fps, filter, undefined, function(tmpDir) {
+        VideoTool.extractFrames(filename, fps, filter, endTime, function(tmpDir) {
             convertFiles(tmpDir, graphicMode, function() {
                 callback(tmpDir);
             });

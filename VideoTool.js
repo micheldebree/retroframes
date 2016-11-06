@@ -9,7 +9,7 @@ function run(options, callback) {
     });
 }
 
-// Get ffmpeg filter to crop video to fill destWidth and destHeight 
+// Get ffmpeg filter to crop video to fill destWidth and destHeight
 function cropFillFilter(videofilename, destWidth, destHeight, callback) {
     // fill up the image
     getSize(videofilename, function(srcWidth, srcHeight) {
@@ -87,7 +87,8 @@ function muxAudio(filename, videoFilename, audioFilename, callback) {
 
 function makeGif(filename, framesDirectory, fps, callback) {
     console.log('Making animated GIF ' + filename + ' from frames in ' + framesDirectory + ' with ' + fps + 'fps');
-    exec('convert', ['-loop', '0', '-delay', 100 / fps, framesDirectory + '/*', filename], function() {
+    exec('convert', ['-loop', '0', '-delay', 100 / fps, '-colors', 256, framesDirectory + '/*', filename], function(error, stdout, stderr) {
+        if (error) throw error;
         callback();
     });
 }

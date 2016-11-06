@@ -1,4 +1,7 @@
 node_modules
 tmp-*
 *.mp4
+*.mkv
+*.gif
+*.mov
 .tags*
