@@ -1,20 +1,15 @@
+/* jshint esversion: 6 */
 // https://www.npmjs.com/package/jimp
 // http://stackoverflow.com/questions/21194934/node-how-to-create-a-directory-if-doesnt-exist
 // TODO: input arguments
 
-var fs = require('fs-extra'),
+
+var Converter = require('./Converter.js'),
+    fs = require('fs-extra'),
     Jimp = require('jimp'),
-    PixelImage = require('./retropixels/PixelImage.js'),
-    GraphicModes = require('./retropixels/GraphicModes.js'),
-    Palette = require('./retropixels/Palette.js'),
-    ColorMap = require('./retropixels/ColorMap.js'),
-    PixelCalculator = require('./retropixels/PixelCalculator.js'),
-    Remapper = require('./retropixels/Remapper.js'),
-    OrderedDitherers = require('./retropixels/OrderedDitherers'),
-    ErrorDiffusionDitherers = require('./retropixels/ErrorDiffusionDitherers'),
     ProgressBar = require('progress'),
     VideoTool = require('./VideoTool.js'),
-    Converter = require('./Converter.js'),
+    GraphicModes = require('./retropixels/src/profiles/GraphicModes.js'),
     bar;
 
 // frames per second of result video
@@ -22,7 +17,7 @@ var fps = 15,
     inFile = 'in.mp4',
     outFile = 'final.mp4',
     tmpFile = 'tmp.mp4',
-    endTime = undefined,
+    endTime,
     graphicMode = GraphicModes.c64Multicolor;
 
 // delete a file, and do nothing if it doesn't exist
