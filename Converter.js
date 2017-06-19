@@ -1,24 +1,24 @@
 /* jshint esversion: 6 */
 // Convert a JIMP picture to a PixelImage
 const Converter = require('./retropixels/src/conversion/Converter.js'),
-      PixelCalculator = require('./retropixels/src/model/ImageData.js'),
-      converter = new Converter();
+    PixelCalculator = require('./retropixels/src/model/ImageData.js'),
+    converter = new Converter();
 
-var fs = require('fs-extra'),
+const fs = require('fs-extra'),
     VideoTool = require('./VideoTool.js'),
     ProgressBar = require('progress'),
     Jimp = require('jimp');
 
-function convertImage(jimpImage, graphicMode) {
-    var x,
-        y,
-        pixel;
-    // jimpImage.normalize();
+// the progress bar
+let bar;
 
+function convertImage(jimpImage) {
+
+    // jimpImage.normalize();
     const pixelImage = converter.convert(jimpImage.bitmap);
 
-    for (y = 0; y < jimpImage.bitmap.height; y += 1) {
-        for (x = 0; x < jimpImage.bitmap.width; x += 1) {
+    for (let y = 0; y < jimpImage.bitmap.height; y += 1) {
+        for (let x = 0; x < jimpImage.bitmap.width; x += 1) {
             PixelCalculator.poke(jimpImage.bitmap, x, y, pixelImage.peek(x, y));
         }
     }
@@ -72,7 +72,7 @@ function convertFiles(tmpDir, graphicMode, callback) {
 }
 
 function getFilter(filename, pixelImage, callback) {
-    var destWidth = pixelImage.width,
+    const destWidth = pixelImage.width,
         destHeight = pixelImage.height,
         cropWidth = pixelImage.width * pixelImage.pWidth,
         cropHeight = pixelImage.height * pixelImage.pHeight;

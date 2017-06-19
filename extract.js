@@ -1,5 +1,4 @@
 var VideoTool = require('./VideoTool.js'),
-    fs = require('fs-extra'),
     fps = 5,
     endtime = '00:00:10',
     cli = require('commander');

@@ -7,7 +7,7 @@ Process video with the help of [retropixels](https://github.com/micheldebree/ret
 There are two ways to run this tool:
 
 - Using Docker (easy)
-- Using your local OS (moderately easy)
+- Using the source code (moderately easy)
 
 ## Run using [Docker](https://www.docker.com)
 
@@ -28,20 +28,18 @@ N.B.
 
 ## Prerequisites
 
+- [Git](https://git-scm.com)
 - [NodeJS](https://nodejs.org)
 - [```ffmpeg```](https://www.ffmpeg.org) command line utility callable from your ```PATH```
 
-## Get started
+## Get source and dependencies
 
-Assuming you have cloned or unpacked this project in folder ```retroframes```
-
-### Install dependencies
-
+    git clone https://github.com/micheldebree/retroframes.git
     cd retroframes
     git submodule update --init --recursive
     npm install
 
-### Usage
+## Usage
 
 - Copy the video to process to ```retroframes/in.mp4```
 

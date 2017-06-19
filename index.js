@@ -6,19 +6,17 @@
 
 var Converter = require('./Converter.js'),
     fs = require('fs-extra'),
-    Jimp = require('jimp'),
-    ProgressBar = require('progress'),
     VideoTool = require('./VideoTool.js'),
-    GraphicModes = require('./retropixels/src/profiles/GraphicModes.js'),
-    bar;
+    GraphicModes = require('./retropixels/src/profiles/GraphicModes.js');
 
 // frames per second of result video
-var fps = 15,
+const fps = 15,
     inFile = 'in.mp4',
     outFile = 'final.mp4',
     tmpFile = 'tmp.mp4',
-    endTime,
     graphicMode = GraphicModes.c64Multicolor;
+
+let endTime;
 
 // delete a file, and do nothing if it doesn't exist
 function silentDelete(filename, callback) {
