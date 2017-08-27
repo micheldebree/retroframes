@@ -16,13 +16,12 @@ The only prerequisite is Docker itself. Make sure it is installed and working.
 - Name your input video ```in.mp4```
 - In the same folder as ```in.mp4```, run:
 
-        docker run --rm -v "$PWD":/data micheldebree/retroframes
+        docker run --rm -it -v "$PWD":/data micheldebree/retroframes
 
 N.B.
 
 - The first time, the Docker image is downloaded from the internet. Be patient, this only happens once.
 - The input video can be any format that ```ffmpeg``` understands. Just name it ```in.mp4``` anyway.
-- The docker container does not display a progressbar. Be patient. Check the contents of the created ```tmp-*``` folder to see progress.
 
 ## Run the old fashioned way
 
