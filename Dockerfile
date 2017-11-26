@@ -4,7 +4,7 @@ LABEL maintainer="michel@micheldebree.nl"
 RUN apk upgrade -U \
  && apk add ca-certificates ffmpeg \
  && rm -rf /var/cache/*
-COPY . /retroframes/
-RUN mkdir -p /data
 WORKDIR /data
+COPY . /retroframes/
+RUN cd /retroframes && npm install
 ENTRYPOINT ["node", "/retroframes/index.js"]

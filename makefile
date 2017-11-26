@@ -1,4 +1,4 @@
-VERSION=0.1.0
+VERSION=0.1.1
 DOCKERIMAGE=micheldebree/retroframes:$(VERSION)
 DOCKERCMD=docker run -t --rm -v "$$PWD":/data $(DOCKERIMAGE)
 LOCALCMD=node index.js
@@ -9,7 +9,7 @@ run: dockerimage
 node_modules:
 	npm install
 
-dockerimage: node_modules
+dockerimage:
 	docker build -t $(DOCKERIMAGE) .
 
 docker_debug: dockerimage
