@@ -1,8 +1,9 @@
 /* jshint esversion: 6 */
 // Convert a JIMP picture to a PixelImage
-const Converter = require('./retropixels/src/conversion/Converter.js'),
-    PixelCalculator = require('./retropixels/src/model/ImageData.js'),
-    converter = new Converter();
+const Converter = require('./node_modules/retropixels/target/conversion/Converter.js'),
+    ImageData = require('./node_modules/retropixels/target/model/ImageData.js'),
+    GraphicModes = require('./node_modules/retropixels/target/profiles/GraphicModes.js'),
+    converter = new Converter.Converter(GraphicModes.c64Multicolor);
 
 const fs = require('fs-extra'),
     VideoTool = require('./VideoTool.js'),
@@ -19,7 +20,7 @@ function convertImage(jimpImage) {
 
     for (let y = 0; y < jimpImage.bitmap.height; y += 1) {
         for (let x = 0; x < jimpImage.bitmap.width; x += 1) {
-            PixelCalculator.poke(jimpImage.bitmap, x, y, pixelImage.peek(x, y));
+            ImageData.ImageData.poke(jimpImage.bitmap, x, y, pixelImage.peek(x, y));
         }
     }
 
@@ -84,7 +85,7 @@ function getFilter(filename, pixelImage, callback) {
 // extract frames and convert them to a graphicMode
 // returns the temporary folder that contains the converted frames
 function convertVideo(filename, graphicMode, fps, endTime, callback) {
-    getFilter(filename, graphicMode.create(), function(filter) {
+    getFilter(filename, graphicMode.factory(), function(filter) {
         VideoTool.extractFrames(filename, fps, filter, endTime, function(tmpDir) {
             convertFiles(tmpDir, graphicMode, function() {
                 callback(tmpDir);

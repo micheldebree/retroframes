@@ -16,6 +16,7 @@
         "commander": "2.9.0",
         "fs-extra": "0.30.0",
         "jimp": "0.2.27",
-        "progress": "1.1.8"
+        "progress": "1.1.8",
+        "retropixels": "0.6.0"
     }
 }

@@ -7,7 +7,7 @@
 var Converter = require('./Converter.js'),
     fs = require('fs-extra'),
     VideoTool = require('./VideoTool.js'),
-    GraphicModes = require('./retropixels/src/profiles/GraphicModes.js');
+    GraphicModes = require('./node_modules/retropixels/target/profiles/GraphicModes.js');
 
 // frames per second of result video
 const fps = 15,
