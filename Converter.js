@@ -16,7 +16,7 @@ let bar;
 
 let ditherer = new OrderedDither.OrderedDither(
   OrderedDither.OrderedDither.presets["bayer4x4"],
-  32
+  16
 );
 
 function convertImage(jimpImage) {

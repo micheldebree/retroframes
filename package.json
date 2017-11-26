@@ -13,10 +13,10 @@
     "author": "Michel de Bree",
     "license": "MIT",
     "dependencies": {
-        "commander": "2.9.0",
-        "fs-extra": "0.30.0",
-        "jimp": "0.2.27",
-        "progress": "1.1.8",
-        "retropixels": "0.6.0"
+        "commander": "2.12.1",
+        "fs-extra": "4.0.2",
+        "jimp": "0.2.28",
+        "progress": "2.0.0",
+        "retropixels": "0.6.1"
     }
 }

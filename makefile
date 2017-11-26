@@ -22,4 +22,5 @@ release:
 
 clean:
 	rm -rf tmp-*/
+	rm -rf node_modules
 

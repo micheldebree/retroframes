@@ -1,48 +1,20 @@
 # Retroframes
 
-Process video with the help of [retropixels](https://github.com/micheldebree/retropixels).
+Make video look like it's made on a Commodore 64.
 
 **The status of this project is purely proof-of-concept; use at your own risk!**
 
-There are two ways to run this tool:
+## Prerequisites
 
-- Using Docker (easy)
-- Using the source code (moderately easy)
+[Docker](https://www.docker.com). Make sure it is installed and working.
 
-## Run using [Docker](https://www.docker.com)
+## Run
 
-The only prerequisite is Docker itself. Make sure it is installed and working.
-
-- Name your input video ```in.mp4```
-- In the same folder as ```in.mp4```, run:
-
-        docker run --rm -it -v "$PWD":/data micheldebree/retroframes
+```sh
+docker run --rm -it -v "$PWD":/data micheldebree/retroframes <video file>
+```
 
 N.B.
 
 - The first time, the Docker image is downloaded from the internet. Be patient, this only happens once.
-- The input video can be any format that ```ffmpeg``` understands. Just name it ```in.mp4``` anyway.
-
-## Run the old fashioned way
-
-## Prerequisites
-
-- [Git](https://git-scm.com)
-- [NodeJS](https://nodejs.org)
-- [```ffmpeg```](https://www.ffmpeg.org) command line utility callable from your ```PATH```
-
-## Get source and dependencies
-
-    git clone https://github.com/micheldebree/retroframes.git
-    cd retroframes
-    git submodule update --init --recursive
-    npm install
-
-## Usage
-
-- Copy the video to process to ```retroframes/in.mp4```
-
-      node index.js
-
-- Wait.
-- Open ```final.mp4```.
+- The input video can be any format that ```ffmpeg``` understands.

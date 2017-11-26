@@ -1,6 +1,6 @@
 # Run retroframes
-FROM node:6.11.0-alpine
-MAINTAINER michel@michdeldebree.nl
+FROM node:8.9-alpine
+LABEL maintainer="michel@micheldebree.nl"
 RUN apk upgrade -U \
  && apk add ca-certificates ffmpeg \
  && rm -rf /var/cache/*
