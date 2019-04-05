@@ -16,5 +16,6 @@ docker run --rm -it -v "$PWD":/data micheldebree/retroframes <video file>
 
 N.B.
 
-- The first time, the Docker image is downloaded from the internet. Be patient, this only happens once.
-- The input video can be any format that ```ffmpeg``` understands.
+- The first time, the Docker image is downloaded from the internet.
+  Be patient, this only happens once.
+- The input video can be any format that `ffmpeg` understands.

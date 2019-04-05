@@ -13,12 +13,12 @@ function run(options, callback) {
 function cropFillFilter(videofilename, destWidth, destHeight, callback) {
     // fill up the image
     getSize(videofilename, function(srcWidth, srcHeight) {
-        var destratio = destWidth / destHeight;
-        var srcratio = srcWidth / srcHeight;
-        cropwidth = Math.round(srcratio > destratio ? srcHeight * destratio : srcWidth);
-        cropheight = Math.round(srcratio > destratio ? srcHeight : srcWidth / destratio);
-        sourceLeft = Math.round((srcWidth - cropwidth) / 2);
-        sourceTop = Math.round((srcHeight - cropheight) / 2);
+        const destratio = destWidth / destHeight;
+        const srcratio = srcWidth / srcHeight;
+        const cropwidth = Math.round(srcratio > destratio ? srcHeight * destratio : srcWidth);
+        const cropheight = Math.round(srcratio > destratio ? srcHeight : srcWidth / destratio);
+        const sourceLeft = Math.round((srcWidth - cropwidth) / 2);
+        const sourceTop = Math.round((srcHeight - cropheight) / 2);
         console.log('Input video size: ' + srcWidth + 'x' + srcHeight);
         callback('crop=' + cropwidth + ':' + cropheight + ':' + sourceLeft + ':' + sourceTop + ',scale=' + destWidth + ':' + destHeight);
     });
@@ -43,7 +43,7 @@ function getSize(videofilename, callback) {
 function extractFrames(filename, framesPerSecond, filter, maxTime, callback) {
     fs.mkdtemp('./tmp-', function(error, tmpDir) {
         if (error) throw error;
-        args = ['-i', filename, '-r', framesPerSecond];
+        const args = ['-i', filename, '-r', framesPerSecond];
         console.log('Extracting frames from ' + filename + ' to ' + tmpDir + ' at ' + framesPerSecond + 'fps.');
         if (maxTime !== undefined) {
             console.log("Using upto " + maxTime);
