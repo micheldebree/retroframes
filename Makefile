@@ -1,5 +1,5 @@
 IMAGE=micheldebree/retroframes
-VERSION=0.1.2
+VERSION=0.1.3
 DOCKERIMAGE=$(IMAGE):$(VERSION)
 
 dockerimage:

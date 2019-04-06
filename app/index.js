@@ -11,7 +11,7 @@ var Converter = require("./Converter.js"),
 
 // frames per second of result video
 const fps = 15,
-  graphicMode = GraphicModes.c64Multicolor;
+  graphicMode = GraphicModes.GraphicModes.c64Multicolor;
 
 let endTime, inFile, outFile, tmpFile;
 
@@ -46,7 +46,7 @@ function makeMovie(tmpDir, callback) {
 }
 
 cli
-  .version("0.1.1")
+  .version("0.1.3")
   .usage("<infile>")
   .parse(process.argv);
 

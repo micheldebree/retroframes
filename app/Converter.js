@@ -4,7 +4,9 @@ const Converter = require("./node_modules/retropixels/target/conversion/Converte
   ImageData = require("./node_modules/retropixels/target/model/ImageData.js"),
   GraphicModes = require("./node_modules/retropixels/target/profiles/GraphicModes.js"),
   OrderedDither = require("./node_modules/retropixels/target/conversion/OrderedDither.js"),
-  converter = new Converter.Converter(GraphicModes.c64Multicolor);
+    converter = new Converter.Converter();
+
+//   converter.poker.quantizer.measurer = converter.poker.quantizer.distanceRainbow;
 
 const fs = require("fs-extra"),
   VideoTool = require("./VideoTool.js"),
@@ -22,7 +24,7 @@ let ditherer = new OrderedDither.OrderedDither(
 function convertImage(jimpImage) {
   // jimpImage.normalize();
   ditherer.dither(jimpImage.bitmap);
-  const pixelImage = converter.convert(jimpImage.bitmap);
+  const pixelImage = converter.convert(jimpImage.bitmap, GraphicModes.GraphicModes.c64Multicolor);
 
   for (let y = 0; y < jimpImage.bitmap.height; y += 1) {
     for (let x = 0; x < jimpImage.bitmap.width; x += 1) {
@@ -32,8 +34,8 @@ function convertImage(jimpImage) {
 
   // resize according to pixel width and height
   jimpImage.resize(
-    pixelImage.width * pixelImage.pWidth,
-    pixelImage.height * pixelImage.pHeight
+    pixelImage.mode.width * pixelImage.mode.pixelWidth,
+    pixelImage.mode.height * pixelImage.mode.pixelHeight
   );
 }
 
@@ -85,10 +87,10 @@ function convertFiles(tmpDir, graphicMode, callback) {
 }
 
 function getFilter(filename, pixelImage, callback) {
-  const destWidth = pixelImage.width,
-    destHeight = pixelImage.height,
-    cropWidth = pixelImage.width * pixelImage.pWidth,
-    cropHeight = pixelImage.height * pixelImage.pHeight;
+  const destWidth = pixelImage.mode.width,
+    destHeight = pixelImage.mode.height,
+    cropWidth = pixelImage.mode.width * pixelImage.mode.pixelWidth,
+    cropHeight = pixelImage.mode.height * pixelImage.mode.pixelHeight;
   VideoTool.cropFillFilter(filename, cropWidth, cropHeight, function(
     cropfilter
   ) {

@@ -1,4 +1,4 @@
-*.mp4
-node_modules
-*.webm
-tmp-*
+**/*.mp4
+**/node_modules
+**/*.webm
+**/tmp-*
