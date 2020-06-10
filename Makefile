@@ -1,5 +1,5 @@
 IMAGE=micheldebree/retroframes
-VERSION=0.1.3
+VERSION=0.1.4
 DOCKERIMAGE=$(IMAGE):$(VERSION)
 
 dockerimage:
@@ -18,3 +18,5 @@ clean:
 	rm -rf ./app/tmp-*/
 	rm -rf ./app/node_modules
 
+test:
+	node ./app/index.js magnum_short.mp4

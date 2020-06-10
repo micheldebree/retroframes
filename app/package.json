@@ -13,13 +13,13 @@
     "author": "Michel de Bree",
     "license": "MIT",
     "dependencies": {
-        "commander": "2.20.0",
-        "fs-extra": "7.0.1",
-        "jimp": "0.6.1",
+        "commander": "5.1.0",
+        "fs-extra": "9.0.1",
+        "jimp": "0.13.0",
         "progress": "2.0.3",
-        "retropixels": "0.6.2"
+        "retropixels": "0.7.1"
     },
     "devDependencies": {
-        "eslint": "5.16.0"
+        "eslint": "7.1.0"
     }
 }

@@ -4,12 +4,19 @@
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
+      {
+          "type": "node",
+          "request": "launch",
+          "name": "Retrofy",
+          "program": "${workspaceFolder}/retrofy.js",
+          "args": ["tmp-7FwLPw"]
+      },
     {
       "type": "node",
       "request": "launch",
       "name": "Launch Program",
       "program": "${workspaceFolder}/index.js",
-      "args": ["magnum.mp4"]
+      "args": ["magnum_short.mp4"]
     }
   ]
 }

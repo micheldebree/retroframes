@@ -87,7 +87,7 @@ function muxAudio(filename, videoFilename, audioFilename, callback) {
 
 function makeGif(filename, framesDirectory, fps, callback) {
     console.log('Making animated GIF ' + filename + ' from frames in ' + framesDirectory + ' with ' + fps + 'fps');
-    exec('convert', ['-loop', '0', '-delay', 100 / fps, '-colors', 256, framesDirectory + '/*', filename], function(error, stdout, stderr) {
+    exec('convert', ['-loop', '0', '-delay', 100 / fps, '-colors', 16, framesDirectory + '/*', filename], function(error, stdout, stderr) {
         if (error) throw error;
         callback();
     });
