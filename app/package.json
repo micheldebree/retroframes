@@ -1,6 +1,6 @@
 {
     "name": "retroframes",
-    "version": "0.1.3",
+    "version": "0.1.4",
     "description": "Process video with retropixels",
     "repository": {
         "type": "git",
@@ -17,7 +17,7 @@
         "fs-extra": "9.0.1",
         "jimp": "0.13.0",
         "progress": "2.0.3",
-        "retropixels": "0.7.1"
+        "retropixels": "0.7.2"
     },
     "devDependencies": {
         "eslint": "7.1.0"

@@ -2,8 +2,12 @@
 // Convert a JIMP picture to a PixelImage
 const retropixels = require("retropixels");
 
+const palette = retropixels.Palettes.all["colodore"];
+const colorspace = retropixels.Quantizer.colorspaces["xyz"];
+const quantizer = new retropixels.Quantizer(palette, colorspace);
+const poker = new retropixels.Poker(quantizer);
+const converter = new retropixels.Converter(poker);
 
-const converter = new retropixels.Converter();
 const prepost = retropixels.JimpPreprocessor;
 //converter.poker.quantizer.measurer = converter.poker.quantizer.distanceRainbow;
 
@@ -19,9 +23,6 @@ const ditherer = new retropixels.OrderedDither(
     retropixels.OrderedDither.presets["bayer4x4"],
     32
 );
-
-const palette = retropixels.Palettes.all["colodore"];
-const colorspace = retropixels.Quantizer.colorspaces["xyz"];
 
 function coordsToIndex(imageData, x, y) {
     return Math.floor(y) * (imageData.width << 2) + (x << 2);
